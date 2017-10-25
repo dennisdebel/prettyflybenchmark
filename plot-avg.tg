@@ -1,0 +1,43 @@
+#!/usr/local/bin/gnuplot
+#run:  gnuplot -c plot.tg argument (filename?)
+#nice docs:
+
+#print "first argument     : ", ARG1
+
+date = system("date +%F.%H.%M.%S")
+set terminal png size 800,600
+set output date.'-avg.png'
+set rmargin 10
+#set key top left textcolor linestyle 99 
+
+set grid ytics lt 0 lw 1 lc rgb "#bbbbbb"
+set grid xtics lt 0 lw 1 lc rgb "#bbbbbb"
+
+
+
+set datafile separator ","
+set title "Pretty Fly Benchmark Averages" . ARG1
+
+#set xdata time
+#set timefmt "%s"
+#set format x "%H:%M"
+
+set xrange [0:2] #must match test iterations!
+#set xrange [-30<*:*<10] #auto xrange
+
+set xlabel "time"
+set yrange [0:100]
+set ylabel "bandwidth (Mb)"
+
+#set style line 1 lt rgb "blue"
+#set nokey 
+
+
+
+
+FILES = system("ls -1 *avg.csv")
+LABEL = system("ls -1 *avg.csv |  sed -e 's/-avg.csv//' ")
+
+
+plot for [i=1:words(FILES)] word(FILES,i) u 0:2  with linespoints ls i title word(LABEL,i)
+
